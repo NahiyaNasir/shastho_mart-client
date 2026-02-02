@@ -4,6 +4,7 @@ import {  Menu,  } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
+
 import {
   Accordion,
   AccordionContent,
@@ -29,6 +30,11 @@ import {
 import Link from "next/link";
 import { ModelToggle } from "./ModelToggle";
 
+import { User } from "@/types/user.types";
+import { toast } from "sonner";
+import { authClient } from "@/lib/auth-client";
+
+
 interface MenuItem {
   title: string;
   url: string;
@@ -38,6 +44,7 @@ interface MenuItem {
 }
 
 interface Navbar1Props {
+  user:User|null,
   className?: string;
   logo?: {
     url: string;
@@ -58,19 +65,21 @@ interface Navbar1Props {
     };
   };
 }
+ ;
 
 const Navbar = ({
+user,
   logo = {
-    url: "https://www.shadcnblocks.com",
-    src: "https://deifkwefumgah.cloudfront.net/shadcnblocks/block/logos/shadcnblockscom-icon.svg",
+    url: "https://localhost:3000",
+    src: "https://ibb.co.com/NPRsXnR",
     alt: "logo",
-    title: "Shadcnblocks.com",
+    title: "Shastho-Mart",
   },
   menu = [
      { title: "Home", url: "/" },
     {
-      title: "Blogs",
-      url: "/blogs",
+      title: "Shop",
+      url: "/shop",
     },
     {
       title: "About",
@@ -84,11 +93,29 @@ const Navbar = ({
   ],
   auth = {
       login: { title: "Login", url: "/login" },
-    signup: { title: "Register", url: "/register" },
+    signup: { title: "Register", url: "/Register" },
   },
   className,
+
+  
+
 }: Navbar1Props) => {
+
+   const handleLogout = async () => {
+        const toastId = toast.loading("Logging out...");
+        try {
+            await authClient.signOut();
+            toast.success("Logged out successfully", { id: toastId });
+
+            // router.refres();
+        } catch (error) {
+            console.log(error);
+            toast.error("Failed to logout", { id: toastId });
+        }
+    };
+ 
   return (
+    
     <section className={cn("py-4", className)}>
       <div className="container mx-auto px-1">
         {/* Desktop Menu */}
@@ -101,6 +128,7 @@ const Navbar = ({
                 className="max-h-8 dark:invert"
                 alt={logo.alt}
               /> */}
+    
               <span className="text-lg font-semibold tracking-tighter">
                 {logo.title}
               </span>
@@ -115,12 +143,41 @@ const Navbar = ({
           </div>
           <div className="flex gap-2">
             <ModelToggle></ModelToggle>
-            <Button asChild variant="outline" size="sm">
-              <a href={auth.login.url}>{auth.login.title}</a>
-            </Button>
-            <Button asChild size="sm">
-              <a href={auth.signup.url}>{auth.signup.title}</a>
-            </Button>
+ {user ?
+  (
+  
+                            <div className="flex gap-2">
+                                <Button
+                                    onClick={handleLogout}
+                                    variant={`outline`}
+                                    size={`default`}
+                                    className="cursor-pointer"
+                                >
+                                    Logout
+                                </Button>
+                                <div className="relative w-10 h-10">
+                                    
+                                </div>
+                            </div>
+                        ) : (
+                            <>
+                                <Button
+                                    asChild
+                                    variant="outline"
+                                    size="default"
+                                >
+                                    <Link href={auth.login.url}>
+                                        {auth.login.title}
+                                    </Link>
+                                </Button>
+                                <Button asChild size="default">
+                                    <Link href={auth.signup.url}>
+                                        {auth.signup.title}
+                                    </Link>
+                                </Button>
+                            </>
+                        )}
+
           </div>
         </nav>
 
@@ -163,11 +220,12 @@ const Navbar = ({
                   </Accordion>
 
                   <div className="flex flex-col gap-3">
+               
                     <Button asChild variant="outline">
-                      <a href={auth.login.url}>{auth.login.title}</a>
+                      <Link href={auth.login.url}>{auth.login.title}</Link>
                     </Button>
                     <Button asChild>
-                      <a href={auth.signup.url}>{auth.signup.title}</a>
+                      <Link href={auth.signup.url}>{auth.signup.title}</Link>
                     </Button>
                   </div>
                 </div>

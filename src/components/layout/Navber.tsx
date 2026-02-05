@@ -1,6 +1,6 @@
 "use client";
 
-import {  Menu,  } from "lucide-react";
+import {  Menu, PackageOpen, ShoppingCart,  } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
@@ -33,6 +33,7 @@ import { ModelToggle } from "./ModelToggle";
 import { User } from "@/types/user.types";
 import { toast } from "sonner";
 import { authClient } from "@/lib/auth-client";
+import { TooltipButton } from "../ui/tooltip-button";
 
 
 interface MenuItem {
@@ -87,7 +88,7 @@ user,
     },
     {
       title: " Dashboard",
-      url: "/dashboard",
+      url: "/seller/dashboard"
     },
 
   ],
@@ -144,8 +145,13 @@ user,
           <div className="flex gap-2">
             <ModelToggle></ModelToggle>
  {user ?
-  (
-  
+  (<>
+     <Link href={"/cart"}>
+                  <TooltipButton icon={ShoppingCart} title="Cart" />
+                </Link>
+                <Link href={"/orders"}>
+                  <TooltipButton icon={PackageOpen} title="Orders" />
+                </Link>
                             <div className="flex gap-2">
                                 <Button
                                     onClick={handleLogout}
@@ -159,6 +165,7 @@ user,
                                     
                                 </div>
                             </div>
+                            </>
                         ) : (
                             <>
                                 <Button

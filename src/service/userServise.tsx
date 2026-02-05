@@ -15,7 +15,7 @@ const getSession = async () => {
       cache: "no-store",
     });
     const session = await res.json();
-        console.log(session);
+        // console.log(session);
     if (session === null) {
       return { data: null, error: { message: "Session is missing!" } };
     }

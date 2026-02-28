@@ -49,6 +49,7 @@ export function LoginForm({ ...props }: React.ComponentProps<typeof Card>) {
     onSubmit: async ({ value }) => {
       const toastID = toast.loading("login in...");
       try {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { data, error } = await authClient.signIn.email(value);
         // console.log({ data, error });
         if (error) {

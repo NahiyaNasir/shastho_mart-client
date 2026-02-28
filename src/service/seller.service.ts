@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import "server-only";
 import { env } from "@/env";
 import { serviceOptions } from "@/types/pg.types";
 
@@ -28,8 +29,7 @@ const createMedicine = async (payload: unknown) => {
         details: data,
       };
     }
-    return { data, error: null };
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    return { data, error: null };   
   } catch (err) {
     return {
       data: null,

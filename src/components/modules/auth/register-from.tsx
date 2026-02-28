@@ -48,8 +48,9 @@ export function RegisterForm({ ...props }: React.ComponentProps<typeof Card>) {
     onSubmit: async ({ value }) => {
       const toastID = toast.loading("Creating User...");
       try {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { data, error } = await authClient.signUp.email(value);
-        console.log({ data, error });
+        // console.log({ data, error });
         if (error) {
           toast.error(error.message, { id: toastID });
           return;
@@ -156,14 +157,7 @@ export function RegisterForm({ ...props }: React.ComponentProps<typeof Card>) {
                   );
                 }}
               </form.Field>
-               <Button
-          onClick={() => handleGoogleLogin()}
-          variant="outline"
-          type="button"
-          className="w-full"
-        >
-          Continue with Google
-        </Button>
+        
             </FieldGroup>
           </form>
         </CardContent>

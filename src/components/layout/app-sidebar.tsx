@@ -30,7 +30,7 @@ user: { role: string };
   
 ) {
   let routes: Route[] = [];
-console.log("Current User Role:", user?.role); 
+// console.log("Current User Role:", user?.role); 
   switch (user.role) {
     case Roles.ADMIN:
       routes = adminRoutes;

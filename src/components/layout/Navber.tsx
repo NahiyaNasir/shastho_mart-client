@@ -1,9 +1,8 @@
 "use client";
 
-import {  Menu, PackageOpen, ShoppingCart,  } from "lucide-react";
+import { Menu,  ShoppingCart } from "lucide-react";
 
 import { cn } from "@/lib/utils";
-
 
 import {
   Accordion,
@@ -33,7 +32,11 @@ import { ModelToggle } from "./ModelToggle";
 import { User } from "@/types/user.types";
 import { toast } from "sonner";
 import { authClient } from "@/lib/auth-client";
-import { TooltipButton } from "../ui/tooltip-button";
+// import { TooltipButton } from "../ui/tooltip-button";
+import { UserNav } from "./user-nav";
+
+import { useRouter } from "next/navigation";
+
 
 
 interface MenuItem {
@@ -45,7 +48,7 @@ interface MenuItem {
 }
 
 interface Navbar1Props {
-  user:User|null,
+  user: User | null;
   className?: string;
   logo?: {
     url: string;
@@ -66,10 +69,8 @@ interface Navbar1Props {
     };
   };
 }
- ;
-
 const Navbar = ({
-user,
+  user,
   logo = {
     url: "https://localhost:3000",
     src: "https://ibb.co.com/NPRsXnR",
@@ -77,7 +78,7 @@ user,
     title: "Shastho-Mart",
   },
   menu = [
-     { title: "Home", url: "/" },
+    { title: "Home", url: "/" },
     {
       title: "Shop",
       url: "/shop",
@@ -86,37 +87,50 @@ user,
       title: "About",
       url: "/about",
     },
-    {
-      title: " Dashboard",
-      url: "/seller/dashboard"
-    },
-
+    // {
+    //   title: " Dashboard",
+    //   url: "/seller/dashboard",
+    // },
   ],
   auth = {
-      login: { title: "Login", url: "/login" },
+    login: { title: "Login", url: "/login" },
     signup: { title: "Register", url: "/Register" },
   },
   className,
-
-  
-
 }: Navbar1Props) => {
+  // const handleLogout = async () => {
+  //   const toastId = toast.loading("Logging out...");
+  //   try {
+  //     await authClient.signOut();
+  //     toast.success("Logged out successfully", { id: toastId });
 
-   const handleLogout = async () => {
-        const toastId = toast.loading("Logging out...");
-        try {
-            await authClient.signOut();
-            toast.success("Logged out successfully", { id: toastId });
+  //     // router.refresh();
+  //   } catch (error) {
+  //     console.log(error);
+  //     toast.error("Failed to logout", { id: toastId });
+  //   }
+  // };
+  const router=useRouter();
 
-            // router.refres();
-        } catch (error) {
-            console.log(error);
-            toast.error("Failed to logout", { id: toastId });
-        }
-    };
+  const handleLogout = async () => {
  
-  return (
+  const toastId = toast.loading("Logging out...");
+  try {
+    await authClient.signOut();
     
+    toast.success("Logged out successfully", { id: toastId });
+
+    
+    router.refresh(); 
+
+   
+    window.location.href = "/"; 
+
+  } catch (error) {
+    console.error("Logout error:", error);
+    toast.error("Failed to logout", { id: toastId });
+  }}
+  return (
     <section className={cn("py-4", className)}>
       <div className="container mx-auto px-1">
         {/* Desktop Menu */}
@@ -129,7 +143,7 @@ user,
                 className="max-h-8 dark:invert"
                 alt={logo.alt}
               /> */}
-    
+
               <span className="text-lg font-semibold tracking-tighter">
                 {logo.title}
               </span>
@@ -144,47 +158,20 @@ user,
           </div>
           <div className="flex gap-2">
             <ModelToggle></ModelToggle>
- {user ?
-  (<>
-     <Link href={"/cart"}>
-                  <TooltipButton icon={ShoppingCart} title="Cart" />
-                </Link>
-                <Link href={"/orders"}>
-                  <TooltipButton icon={PackageOpen} title="Orders" />
-                </Link>
-                            <div className="flex gap-2">
-                                <Button
-                                    onClick={handleLogout}
-                                    variant={`outline`}
-                                    size={`default`}
-                                    className="cursor-pointer"
-                                >
-                                    Logout
-                                </Button>
-                                <div className="relative w-10 h-10">
-                                    
-                                </div>
-                            </div>
-                            </>
-                        ) : (
-                            <>
-                                <Button
-                                    asChild
-                                    variant="outline"
-                                    size="default"
-                                >
-                                    <Link href={auth.login.url}>
-                                        {auth.login.title}
-                                    </Link>
-                                </Button>
-                                <Button asChild size="default">
-                                    <Link href={auth.signup.url}>
-                                        {auth.signup.title}
-                                    </Link>
-                                </Button>
-                            </>
-                        )}
-
+         {user ? (
+  <div className="flex items-center gap-4">
+    <UserNav user={user} handleLogout={handleLogout} />
+  </div>
+) : (
+  <div className="flex items-center gap-2">
+    <Button asChild variant="outline" size="sm">
+      <Link href={auth.login.url}>{auth.login.title}</Link>
+    </Button>
+    <Button asChild size="sm">
+      <Link href={auth.signup.url}>{auth.signup.title}</Link>
+    </Button>
+  </div>
+)}
           </div>
         </nav>
 
@@ -227,13 +214,29 @@ user,
                   </Accordion>
 
                   <div className="flex flex-col gap-3">
-               
-                    <Button asChild variant="outline">
+       {user ? (
+  <div className="flex items-center gap-4">
+    <UserNav user={user} handleLogout={handleLogout} />
+  </div>
+) : (
+  <div className="flex items-center gap-2">
+    <Button asChild variant="outline" size="sm">
+      <Link href={auth.login.url}>{auth.login.title}</Link>
+    </Button>
+    <Button asChild size="sm">
+      <Link href={auth.signup.url}>{auth.signup.title}</Link>
+    </Button>
+  </div>
+)}
+
+
+
+                    {/* <Button asChild variant="outline">
                       <Link href={auth.login.url}>{auth.login.title}</Link>
                     </Button>
                     <Button asChild>
                       <Link href={auth.signup.url}>{auth.signup.title}</Link>
-                    </Button>
+                    </Button> */}
                   </div>
                 </div>
               </SheetContent>
@@ -263,11 +266,12 @@ const renderMenuItem = (item: MenuItem) => {
 
   return (
     <NavigationMenuItem key={item.title}>
-      <NavigationMenuLink asChild
+      <NavigationMenuLink
+        asChild
         href={item.url}
         className="group inline-flex h-10 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-muted hover:text-accent-foreground"
       >
-       <Link href={item.url}>{item.title}</Link> 
+        <Link href={item.url}>{item.title}</Link>
       </NavigationMenuLink>
     </NavigationMenuItem>
   );
@@ -315,4 +319,4 @@ const SubMenuLink = ({ item }: { item: MenuItem }) => {
   );
 };
 
-  export default Navbar;
+export default Navbar;

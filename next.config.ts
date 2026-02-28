@@ -10,16 +10,24 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-  async rewrites() {
+
+async rewrites() {
+
     return [
+
       {
-        source: '/dashboard',
-        destination: '/admin-dashboard',
+
+        source: "/api/auth/:path*",
+
+        destination: `${process.env.NEXT_PUBLIC_TEST}/api/auth/:path*`,
+
       },
-     
-      
-    ]
+
+    ];
+
   },
+
 };
+
 
 export default nextConfig;

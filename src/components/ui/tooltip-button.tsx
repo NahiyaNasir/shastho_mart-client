@@ -24,7 +24,7 @@ interface TooltipButtonProps {
     | "ghost"
     | null
     | undefined;
-  disabled?: any;
+  disabled?: boolean;
   size?: "icon-sm" | "icon" | "icon-lg" | null | undefined;
 }
 

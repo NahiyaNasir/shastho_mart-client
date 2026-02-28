@@ -10,6 +10,7 @@ export const adminRoutes: Route[] = [
         title: "categories",
         url: "/admin/categories"
       },
+      
       {
         title: "orders",
         url: "/admin/orders"
@@ -18,7 +19,11 @@ export const adminRoutes: Route[] = [
         title: "user",
         url: "/admin/users"
       },
-
+ {
+        title: "Home",
+        url: "/",
+       
+      },
 
     ],
   },

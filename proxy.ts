@@ -1,45 +1,52 @@
-import { Roles } from "@/constanst/role";
-import { userService } from "@/service/userServise";
+
 import { NextRequest, NextResponse } from "next/server";
 
 
-
-
 export async function proxy(request: NextRequest) {
+
   const pathname = request.nextUrl.pathname;
 
-  let isAuthenticated = false;
-  let isAdmin = false;
 
-  const { data } = await userService.getSession();
+  // Skip middleware for verify-email route
 
-  if (data) {
-    isAuthenticated = true;
-    isAdmin = data.user.role === Roles.ADMIN;
+  if (pathname.startsWith("/verify-email")) {
+
+    return NextResponse.next();
+
   }
 
-  //* User in not authenticated at all
-  if (!isAuthenticated) {
+
+  // Check for session token in cookies
+
+  const sessionToken = request.cookies.get("better-auth.session_token");
+console.log(sessionToken);
+
+  //* User is not authenticated at all
+
+  if (!sessionToken) {
+
     return NextResponse.redirect(new URL("/login", request.url));
+
   }
 
-  //* User is authenticated and role = ADMIN
-  //* User can not visit user dashboard
-  if (isAdmin && pathname.startsWith("/seller/dashboard")) {
-    return NextResponse.redirect(new URL("/admin", request.url));
-  }
 
-  //* User is authenticated and role = USER
-  //* User can not visit admin-dashboard
-  if (!isAdmin && pathname.startsWith("/admin")) {
-    return NextResponse.redirect(new URL("/seller/dashboard", request.url));
-  }
+  // Allow access if session exists
 
   return NextResponse.next();
+
 }
 
-// export const config = {
-//   matcher: [
-//     ,
-//   ],
-// };
+
+export const config = {
+
+  matcher: ["/cart",
+    "/checkout",
+    "/checkout/:path*",
+    "/orders",
+    "/orders/:path*",
+    "/profile/:path*",
+    "/seller/:path*",
+    "/admin/:path*",
+    ],
+
+}

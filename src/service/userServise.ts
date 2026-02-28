@@ -1,23 +1,38 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+
 import { env } from "@/env";
+import { PgOptionsRs, serviceOptions } from "@/types/pg.types";
+
 import { cookies } from "next/headers";
+
+const auth_url = env.AUTH_URL;
 const api_url = env.API_URL;
- type PgOptionsRs = {
-  page?: string | number;
-  limit?: string | number;
-  skip?: string | number;
-  sortBy?: string;
-  sortOrder?: string;
-  status?: string;
-  search?: string;
-}
- interface serviceOptions {
-  cache?: RequestCache;
-  revalidate?: number;
-}
+
+
+const getSession = async () => {
+  try {
+    const cookieStore =  await  cookies();
+    const res = await fetch(`${auth_url}/get-session`, {
+      headers: {
+        Cookie: cookieStore.toString(),
+      },
+      cache: "no-store",
+    });
+    const session = await res.json();
+        // console.log(session);
+    if (session === null) {
+      return { data: null, error: { message: "Session is missing!" } };
+    }
+
+    return { data: session, error: null };
+  } catch (error) {
+    return { data: null, error: { message: "Something Went Wrong!" } };
+  }
+};
 
 const getMedicines = async (params?: PgOptionsRs, options?: serviceOptions) => {
   try {
-    const url = new URL(`${api_url}/api/medicines`);
+    const url = new URL(`${api_url}/api/medicine`);
     const cookieStore = await cookies();
 
     if (params) {
@@ -49,13 +64,18 @@ const getMedicines = async (params?: PgOptionsRs, options?: serviceOptions) => {
 
     const res = await fetch(url.toString(), config);
     const data = await res.json();
-
+    // console.log("Seller metadata data:", data.data); // Debug log
     return { data, error: null };
-  } catch (err:unknown) {
+   
+  } catch (err: unknown) {
     return {
       data: null,
-      error: { message: "Something went wrong on get medicines." },
+      error: { message: "Something went wrong on get seller metadata." },
     };
   }
 };
- export {getMedicines}
+export const userService = {
+  getSession,
+  getMedicines,
+ 
+};

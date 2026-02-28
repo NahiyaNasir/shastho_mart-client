@@ -22,18 +22,20 @@ import { authClient } from "@/lib/auth-client";
 import { useForm } from "@tanstack/react-form";
 
 import { UserPlus2, UserRoundCheck } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import * as z from "zod";
 
 const formSchema = z.object({
-  email: z.email(),
+  email: z.string().email("Invalid email address."),
   password: z.string().min(8, "The field need at least 08."),
-  callbackURL: z.url(),
+  callbackURL: z.string().url("Invalid callback URL"),
   
 
 });
 
 export function LoginForm({ ...props }: React.ComponentProps<typeof Card>) {
+  const router= useRouter()
   const form = useForm({
     defaultValues: {
       email: "",
@@ -48,16 +50,21 @@ export function LoginForm({ ...props }: React.ComponentProps<typeof Card>) {
       const toastID = toast.loading("login in...");
       try {
         const { data, error } = await authClient.signIn.email(value);
-        console.log({ data, error });
+        // console.log({ data, error });
         if (error) {
           toast.error(error.message, { id: toastID });
           return;
         }
         toast.success("User Logged In Successfully!", { id: toastID });
+        form.reset()
+      
+        router.push(value.callbackURL)
+          router.refresh()
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (error) {
         toast.error("Something Went Wrong!", { id: toastID });
       }
+      
     },
   });
 

@@ -3,10 +3,10 @@ import * as Z from "zod";
 
 export const env = createEnv({
   server: {
-    BACKEND_URL: Z.url(),
-    FRONTEND_URL: Z.url(),
-    API_URL: Z.url(),
-    AUTH_URL: Z.url(),
+    BACKEND_URL: Z.string().url(),
+    FRONTEND_URL: Z.string().url(),
+    API_URL: Z.string().url(),
+    AUTH_URL: Z.string().url(),
   },
   client: {
   },

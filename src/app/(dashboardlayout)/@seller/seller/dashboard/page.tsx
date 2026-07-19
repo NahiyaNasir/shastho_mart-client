@@ -1,11 +1,4 @@
-// export default function SellerDashboardPage() {
-//   return (
-//     <div>
-//       <h1> seller Dashboard </h1>
 
-//     </div>
-//   );
-// }
 import { DollarSign, ShoppingCart, Package, AlertCircle } from "lucide-react";
 
 import { ChartConfig } from "@/components/ui/chart";
@@ -65,7 +58,7 @@ export default async function SellerDashboardPage() {
           title="Total Revenue"
           value={meta?.totalRevenue}
           icon={DollarSign}
-          // trend="+12%"
+          trend="+12%"
         />
         <DStatsCard
           title="Orders"

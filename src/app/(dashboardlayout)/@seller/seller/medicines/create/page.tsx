@@ -7,8 +7,7 @@ import { X } from "lucide-react";
 
 export default async function AddMedicinePage() {
   const { data } = await AdminService.getCategories({ limit: 20 });
-       console.log(data,"categories data in add medicine page"); // Debug log
-  const categories = data?.data?.data;
+  const categories = data?.data;
 
   return (
     <div className="p-6 w-full mx-auto space-y-8">

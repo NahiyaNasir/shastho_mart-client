@@ -2,26 +2,26 @@
 
 
 import { env } from "@/env";
-import {  serviceOptions } from "@/types/pg.types";
+import { PgOptionsRs, serviceOptions } from "@/types/pg.types";
 import { cookies } from "next/headers";
 
 const api_url = env.API_URL;
 
 
 const getCategories = async (
-  // params?: PgOptionsRs,
+  params?: PgOptionsRs,
   options?: serviceOptions,
 ) => {
   try {
     const url = new URL(`${api_url}/api/categories`);
     const cookieStore = await cookies();
-    // if (params) {
-    //   Object.entries(params).forEach(([key, value]) => {
-    //     if (value !== undefined && value !== null && value !== "") {
-    //       url.searchParams.append(key, value as unknown as string);
-    //     }
-    //   });
-    // }
+    if (params) {
+      Object.entries(params).forEach(([key, value]) => {
+        if (value !== undefined && value !== null && value !== "") {
+          url.searchParams.append(key, value as unknown as string);
+        }
+      });
+    }
 
     const config: RequestInit = {
       headers: {
@@ -81,6 +81,85 @@ const createCategory = async (payload: unknown) => {
     return { data: null, error: { message: "Something went long" } };
   }
 };
+const getUsers = async (
+  params?: PgOptionsRs,
+  options?: serviceOptions,
+) => {
+  try {
+    const url = new URL(`${api_url}/api/admin/users`);
+    const cookieStore = await cookies();
+    if (params) {
+      Object.entries(params).forEach(([key, value]) => {
+        if (value !== undefined && value !== null && value !== "") {
+          url.searchParams.append(key, value as unknown as string);
+        }
+      });
+    }
+
+    const config: RequestInit = {
+      headers: {
+        "Content-Type": "application/json",
+        Cookie: cookieStore.toString(),
+      },
+      cache: "no-store",
+    };
+
+    if (options?.cache) {
+      config.cache = options.cache;
+    }
+
+    if (options?.revalidate) {
+      config.next = { revalidate: options.revalidate };
+    }
+
+    config.next = { ...config.next, tags: ["users"] };
+
+    const res = await fetch(url.toString(), config);
+    const data = await res.json();
+     if (!res.ok) {
+      return {
+        data: null,
+        error: { message: data.message || `Failed to fetch users (status ${res.status})` },
+        details: data,
+      };
+    }
+    return { data, error: null };
+  } catch (err) {
+    return {
+      data: null,
+      error: { message: "Something went wrong on get users." },
+    };
+  }
+};
+
+const updateUserStatus = async (userId: string, status: "BAN" | "UNBAN") => {
+  try {
+    const cookieStore = await cookies();
+
+    const res = await fetch(`${env.API_URL}/api/admin/users/${userId}/status`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Cookie: cookieStore.toString(),
+      },
+      body: JSON.stringify({ status }),
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      return {
+        data: null,
+        error: { message: data.message || "Failed to update user status!" },
+        details: data,
+      };
+    }
+    return { data, error: null };
+  } catch (err) {
+    return { data: null, error: { message: "Something went wrong while updating user status." } };
+  }
+};
+
 const singleMedicineData = async (medicineId: string) => {
   try {
     const cookieStore = await cookies();
@@ -106,14 +185,66 @@ const singleMedicineData = async (medicineId: string) => {
     return { data: null, err: { message: "Something went wrong while fetching single medicine data." } };
   }
 };
+const getAllOrders = async (
+  params?: PgOptionsRs,
+  options?: serviceOptions,
+) => {
+  try {
+    const url = new URL(`${api_url}/api/orders`);
+    const cookieStore = await cookies();
+    if (params) {
+      Object.entries(params).forEach(([key, value]) => {
+        if (value !== undefined && value !== null && value !== "") {
+          url.searchParams.append(key, value as unknown as string);
+        }
+      });
+    }
+
+    const config: RequestInit = {
+      headers: {
+        "Content-Type": "application/json",
+        Cookie: cookieStore.toString(),
+      },
+      cache: "no-store",
+    };
+
+    if (options?.cache) {
+      config.cache = options.cache;
+    }
+
+    if (options?.revalidate) {
+      config.next = { revalidate: options.revalidate };
+    }
+
+    config.next = { ...config.next, tags: ["orders"] };
+
+    const res = await fetch(url.toString(), config);
+    const data = await res.json();
+
+    if (!res.ok) {
+      return {
+        data: null,
+        error: { message: data.message || `Failed to fetch orders (status ${res.status})` },
+        details: data,
+      };
+    }
+
+    return { data, error: null };
+  } catch (err) {
+    return {
+      data: null,
+      error: { message: "Something went wrong on get orders." },
+    };
+  }
+};
 export const AdminService = {
   getCategories,
   createCategory,
   // deleteCategory,
   // updateCategory,
-  // getUser,
-  // updateUserStatus,
-  // getAllOrders,
+  getUsers,
+  updateUserStatus,
+  getAllOrders,
   singleMedicineData,
   // updateMedicineData,
   // updateMedicineStock,

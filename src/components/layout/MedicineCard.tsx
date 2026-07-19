@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -5,8 +7,21 @@ import { Badge } from "@/components/ui/badge";
 import { Pill, ShoppingCart, ArrowUpRight, Eye } from "lucide-react";
 import Link from "next/link";
 import { IMedicine } from "@/types/medicine.types";
+import { useCart } from "@/hooks/use-cart";
+import { toast } from "sonner";
 
 export default function MedicineCard({ medicine }: { medicine:IMedicine}) {
+  const { addItem } = useCart();
+
+  const handleAddToCart = () => {
+    if (medicine.stock <= 0) {
+      toast.error("This medicine is out of stock");
+      return;
+    }
+    addItem(medicine, 1);
+    toast.success(`${medicine.name} added to cart`);
+  };
+
   return (
     <Card className="group overflow-hidden border-slate-200 hover:border-primary/40 hover:shadow-xl hover:shadow-primary/5 transition-all duration-300 rounded-2xl bg-white flex flex-col h-full">
       <CardContent className="p-0 flex flex-col h-full">
@@ -62,12 +77,15 @@ export default function MedicineCard({ medicine }: { medicine:IMedicine}) {
                   View More
                 </Button>
               </Link>
-             <Link href={`cart/${medicine.id}`}>
-              <Button size="sm" className="rounded-xl px-4 gap-2 font-semibold shadow-lg shadow-primary/20 bg-primary hover:bg-primary/90">
+              <Button
+                size="sm"
+                className="rounded-xl px-4 gap-2 font-semibold shadow-lg shadow-primary/20 bg-primary hover:bg-primary/90"
+                onClick={handleAddToCart}
+                disabled={medicine.stock <= 0}
+              >
                 <ShoppingCart className="size-4" />
                 Add
               </Button>
-             </Link>
              
             </div>
           </div>

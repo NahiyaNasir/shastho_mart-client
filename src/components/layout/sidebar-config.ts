@@ -6,7 +6,7 @@ import {
   ShoppingCart,
   Settings,
 } from "lucide-react";
-import { Roles } from "@/constanst/role";
+import { Roles } from "@/constants/role";
 
 export const sidebarConfig = {
   [Roles.ADMIN]: [

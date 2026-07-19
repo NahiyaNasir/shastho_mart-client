@@ -1,8 +1,9 @@
 "use server"
 
 import { AdminService } from "@/service/admin.service";
-import { userService } from "@/service/userServise";
+import { userService } from "@/service/userService";
 import { PgOptionsRs, serviceOptions } from "@/types/pg.types";
+import { cookies } from "next/headers";
 
 export const getAllMedicines = async (
   params?: PgOptionsRs,
@@ -15,5 +16,10 @@ export const getSingleMedicine = async (medicineId: string) => {
   const res = await AdminService.singleMedicineData(medicineId);
   return res;
 }
+export const createOrder = async (data: any) => {
+  const cookieStore = await cookies();
+  const res = await userService.createOrder(data, cookieStore.toString());
+  return res;
+};
 
 

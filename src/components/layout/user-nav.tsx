@@ -22,7 +22,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
  
 export function UserNav({ user, handleLogout }: { user: any, handleLogout: () => void }) {
-
+//  console.log(user,"usernav");
   return (
   
     <DropdownMenu>

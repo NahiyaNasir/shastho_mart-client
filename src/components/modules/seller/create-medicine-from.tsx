@@ -6,6 +6,13 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { createMedicine } from "@/actions/seller.action";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation"; // 2. Add router import
@@ -18,12 +25,23 @@ const medicineSchema = z.object({
   stock: z.number().int().nonnegative("Stock cannot be negative"),
   manufacturer: z.string().optional(),
   categoryId: z.string().min(1, "Category is required"),
-  sellerId: z.string().min(1, "Seller ID is required"),
+  // sellerId is intentionally NOT collected here — the backend derives it
+  // from the authenticated session (req.user.id), so trusting a client-
+  // supplied sellerId would let anyone list medicines under another seller.
 });
 
 type MedicineFormValues = z.infer<typeof medicineSchema>;
 
-export default function MedicineForm() {
+interface Category {
+  id: string;
+  name: string;
+}
+
+interface MedicineFormProps {
+  categories?: Category[];
+}
+
+export default function MedicineForm({ categories = [] }: MedicineFormProps) {
   const router = useRouter();
 
   const form = useForm({
@@ -34,7 +52,6 @@ export default function MedicineForm() {
       stock: 0,
       manufacturer: "",
       categoryId: "",
-      sellerId: "",
     } as MedicineFormValues,
     validators: {
       onSubmit: medicineSchema,
@@ -131,30 +148,39 @@ export default function MedicineForm() {
           )}
         </form.Field>
 
-        <div className="grid grid-cols-2 gap-4">
-          <form.Field name="categoryId">
-            {(field) => (
-              <div className="space-y-1">
-                <Label>Category ID</Label>
-                <Input
-                  value={field.state.value}
-                  onChange={(e) => field.handleChange(e.target.value)}
-                />
-              </div>
-            )}
-          </form.Field>
-          <form.Field name="sellerId">
-            {(field) => (
-              <div className="space-y-1">
-                <Label>Seller ID</Label>
-                <Input
-                  value={field.state.value}
-                  onChange={(e) => field.handleChange(e.target.value)}
-                />
-              </div>
-            )}
-          </form.Field>
-        </div>
+        <form.Field name="categoryId">
+          {(field) => (
+            <div className="space-y-1">
+              <Label>Category</Label>
+              <Select
+                value={field.state.value}
+                onValueChange={(value) => field.handleChange(value)}
+              >
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Select a category" />
+                </SelectTrigger>
+                <SelectContent>
+                  {categories.length === 0 ? (
+                    <SelectItem value="__none" disabled>
+                      No categories available
+                    </SelectItem>
+                  ) : (
+                    categories.map((category) => (
+                      <SelectItem key={category.id} value={category.id}>
+                        {category.name}
+                      </SelectItem>
+                    ))
+                  )}
+                </SelectContent>
+              </Select>
+              {field.state.meta.errors && (
+                <p className="text-destructive text-xs italic">
+                  {field.state.meta.errors.join(", ")}
+                </p>
+              )}
+            </div>
+          )}
+        </form.Field>
 
         <form.Subscribe
           selector={(state) => [state.canSubmit, state.isSubmitting]}

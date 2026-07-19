@@ -1,7 +1,8 @@
 import { getAllMedicines } from "@/actions/user.action";
 import MedicineCard from "@/components/layout/MedicineCard";
 import ShopControls from "@/components/modules/customer/ShopControls";
-import PaginationControl from "@/components/shared/paginatin";
+import PaginationControl from "@/components/shared/paginating";
+
 
 import { IMedicine } from "@/types/medicine.types";
 import { PgOptionsRs } from "@/types/pg.types";
@@ -15,10 +16,8 @@ export default async function Shop({
 }) {
   const { page, search, sortBy, sortOrder } = await searchParams;
   const { data } = await getAllMedicines({ search, page, sortBy, sortOrder });
-console.log(data);
-  const medicines = data?.data?.data ||[];
-  const pagination = data?.data?.pagination;
-  console.log(medicines, pagination, "medicines and pagination data");
+  const medicines = data?.data || [];
+  const pagination = data?.meta;
   return (
     <div className="min-h-screen bg-slate-50/50 pb-20">
       {/* Header */}
@@ -59,8 +58,8 @@ console.log(data);
         )}
 
         <PaginationControl
-          currentPage={pagination?.page}
-          totalPages={pagination?.pages}
+          currentPage={pagination?.page ?? 1}
+          totalPages={pagination?.totalPages ?? 1}
         />
       </div>
     </div>

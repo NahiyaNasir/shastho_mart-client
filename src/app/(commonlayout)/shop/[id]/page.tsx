@@ -1,16 +1,26 @@
 import { getSingleMedicine } from "@/actions/user.action";
-import { Button } from "@/components/ui/button";
-import { ChevronLeft, Minus, Pill, Plus, RotateCcw, ShieldCheck, ShoppingCart, Star, Truck } from "lucide-react";
+import { ChevronLeft, Pill, RotateCcw, ShieldCheck, Star, Truck } from "lucide-react";
 import Link from "next/link";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
+import MedicineDetailActions from "@/components/modules/customer/medicine-detail-actions";
 export default async function   ShopDetailPage({ params }: { params: Promise<{ id: string }> }) {
     const { id } =  await  params;
-    console.log(id);
       const { data } = await getSingleMedicine(id);
       const medicine= data?.data
-      console.log(data,"detail data");
-      console.log(medicine);
+
+      if (!medicine) {
+        return (
+          <div className="min-h-screen flex flex-col items-center justify-center gap-4 text-center px-4">
+            <Pill className="size-16 text-slate-200" />
+            <h1 className="text-2xl font-bold text-slate-800">Medicine not found</h1>
+            <Link href="/shop" className="text-primary font-semibold hover:underline">
+              Back to Shop
+            </Link>
+          </div>
+        );
+      }
+
     return(
         <div className="min-h-screen bg-white pb-20">
       {/* 1. Breadcrumbs & Back Button */}
@@ -85,28 +95,7 @@ export default async function   ShopDetailPage({ params }: { params: Promise<{ i
               </div>
 
               {/* 4. Quantity & Action Buttons */}
-              <div className="space-y-6 pt-4">
-                <div className="flex items-center gap-6">
-                  <div className="flex items-center border border-slate-200 rounded-xl p-1 bg-slate-50">
-                    <Button variant="ghost" size="icon" className="h-10 w-10 rounded-lg hover:bg-white shadow-sm">
-                      <Minus className="size-4" />
-                    </Button>
-                    <span className="w-12 text-center font-bold text-lg">1</span>
-                    <Button variant="ghost" size="icon" className="h-10 w-10 rounded-lg hover:bg-white shadow-sm">
-                      <Plus className="size-4" />
-                    </Button>
-                  </div>
-                  
-                  <Button className="flex-1 h-14 rounded-2xl text-lg font-bold shadow-xl shadow-primary/20 gap-3">
-                    <ShoppingCart className="size-5" />
-                    Add to Cart
-                  </Button>
-                </div>
-
-                <Button variant="outline" className="w-full h-14 rounded-2xl border-slate-200 font-bold hover:bg-slate-50">
-                  Buy Now
-                </Button>
-              </div>
+              <MedicineDetailActions medicine={medicine} />
 
               {/* 5. Trust Badges */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-10">

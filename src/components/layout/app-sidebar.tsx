@@ -14,10 +14,10 @@ import {
   SidebarRail,
 } from "@/components/ui/sidebar";
 import Link from "next/link";
-import { Roles } from "@/constanst/role";
 import { Route } from "@/types/route.types";
 import { adminRoutes } from "@/routes/adminRoutes";
 import { sellerRoutes } from "@/routes/sellerRoutes";
+import { Roles } from "@/constants/role";
 
 
 export function AppSidebar({

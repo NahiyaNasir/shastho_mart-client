@@ -1,4 +1,3 @@
-
 export enum Role {
     CUSTOMER = "CUSTOMER",
     SELLER = "SELLER",
@@ -7,7 +6,7 @@ export enum Role {
 
 export enum UserStatus {
     BAN="BAN",
-    UNBAN="UNBANE"
+    UNBAN="UNBAN"
 
 }
 

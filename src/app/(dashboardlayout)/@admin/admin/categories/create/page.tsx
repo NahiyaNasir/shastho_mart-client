@@ -38,7 +38,7 @@ const form = useForm({
       const toastID = toast.loading("Creating Category...");
       try {
         const res = await createCategory(value);
-        console.log(res.data);
+        // console.log(res.data);
         if (res?.data) {
           toast.success("Category Created.", { id: toastID });
           router.push("/admin/categories");

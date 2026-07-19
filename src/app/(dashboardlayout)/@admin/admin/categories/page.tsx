@@ -7,9 +7,10 @@ import Link from "next/link";
 
 export default async function Categories() {
     const { data } = await AdminService.getCategories();
+    // console.log(data);
       const categories = data?.data;
-         console.log(data?.data,"from cate");
-      console.log(categories);
+        //  console.log(data?.data,"");
+     
    
 
   return (

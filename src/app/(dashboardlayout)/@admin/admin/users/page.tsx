@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { PgOptionsRs } from "@/types/pg.types";
 import { Role, UserStatus, User } from "@/types/user.types";
 import { Users as UsersIcon } from "lucide-react";
-
+export const dynamic = 'force-dynamic';
 export default async function Users({
   searchParams,
 }: {

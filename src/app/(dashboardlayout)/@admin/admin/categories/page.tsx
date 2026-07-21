@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { AdminService } from "@/service/admin.service";
 import { Plus } from "lucide-react";
 import Link from "next/link";
-
+export const dynamic = 'force-dynamic';
 export default async function Categories() {
     const { data } = await AdminService.getCategories();
     // console.log(data);

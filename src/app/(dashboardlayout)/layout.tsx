@@ -6,10 +6,11 @@ import {
 } from "@/components/ui/sidebar";
 import { Roles } from "@/constants/role";
 import { userService } from "@/service/userService";
+import { redirect } from "next/navigation";
 
 ;
 
-
+export const dynamic = "force-dynamic";
 
 
 export default async function DashboardLayout({
@@ -22,6 +23,10 @@ export default async function DashboardLayout({
   seller: React.ReactNode;
 }) {
   const { data } = await userService.getSession();
+
+  if (!data?.user) {
+    redirect("/login");
+  }
 // console.log(data);
   const userInfo = data.user;
 

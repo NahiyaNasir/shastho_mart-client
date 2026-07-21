@@ -132,7 +132,7 @@ const getMedicines = async (
     };
   }
 };
-const updateOrderStauts = async (
+const updateOrderStatus = async (
   id: string,
   payload: any,
   cookieString?: string,
@@ -229,10 +229,66 @@ const deleteSellerMedicine = async (
     };
   }
 };
+const getSellerMedicines = async (
+  sellerId: string,
+  params?: PgOptionsRs,
+  options?: serviceOptions,
+) => {
+  try {
+    const url = new URL(`${api_url}/api/medicine`);
+    url.searchParams.append("sellerId", sellerId);
+    const cookieStore = await cookies();
 
+    if (params) {
+      Object.entries(params).forEach(([key, value]) => {
+        if (value !== undefined && value !== null && value !== "") {
+          url.searchParams.append(key, value as unknown as string);
+        }
+      });
+    }
+
+    const config: RequestInit = {
+      headers: {
+        "Content-Type": "application/json",
+        Cookie: cookieStore.toString(),
+      },
+      cache: "no-store",
+    };
+
+    if (options?.cache) {
+      config.cache = options.cache;
+    }
+
+    if (options?.revalidate) {
+      config.next = { revalidate: options.revalidate };
+    }
+
+    config.next = { ...config.next, tags: ["seller-medicines"] };
+
+    const res = await fetch(url.toString(), config);
+    const data = await res.json();
+
+    if (!res.ok) {
+      return {
+        data: null,
+        error: { message: data.message || `Failed to fetch medicines (status ${res.status})` },
+        details: data,
+      };
+    }
+
+    return { data, error: null };
+  } catch (err) {
+    return { data: null, error: { message: "Something went wrong on get seller medicines." } };
+  }
+}
 export const SellerService = {
  
   createMedicine,
   getSellerMetadata,
+  getSellerMedicines,
+  getMedicines,
+  updateOrderStatus,
+  getSellerAllOrders,
+  deleteSellerMedicine,
   
 };

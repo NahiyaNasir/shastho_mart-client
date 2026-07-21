@@ -7,7 +7,7 @@ import { getSellerMetadata } from "@/actions/seller.action";
 import SellerDashboardChart from "@/components/modules/seller/seller-dashboard-chart";
 
 
-
+export const dynamic = 'force-dynamic';
 
 const revenueData = [
   { date: "2026-01-24", desktop: 0 },

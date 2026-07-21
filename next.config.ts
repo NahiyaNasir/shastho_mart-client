@@ -19,7 +19,7 @@ async rewrites() {
 
         source: "/api/auth/:path*",
 
-        destination: `${process.env.NEXT_PUBLIC_TEST}/api/auth/:path*`,
+        destination: `${process.env.API_URL}/api/auth/:path*`,
 
       },
 

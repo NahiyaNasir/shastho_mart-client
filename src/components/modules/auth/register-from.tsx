@@ -39,7 +39,7 @@ export function RegisterForm({ ...props }: React.ComponentProps<typeof Card>) {
       name: "",
       email: "",
       password: "",
-      callbackURL: "http://localhost:3000",
+      callbackURL: "/",
   
     },
     validators: {

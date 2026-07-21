@@ -17,7 +17,7 @@ import { z } from "zod";
 
 
 
-
+export const dynamic = 'force-dynamic';
 const categorySchema = z.object({
   // name: z.string().min(2, "Name must be at least 2 characters"),
   name: z.string().min(2, "Invalid category name. Only letters, numbers, spaces, and hyphens are allowed."),

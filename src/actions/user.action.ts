@@ -23,3 +23,15 @@ export const createOrder = async (data: any) => {
 };
 
 
+export const getMyOrders = async (
+  params?: PgOptionsRs,
+  options?: serviceOptions,
+) => {
+  const res = await userService.getMyOrders(params, options);
+  return res;
+};
+export const getOrderById = async (orderId: string) => {
+  const res = await userService.getOrderById(orderId);
+  return res;
+}
+

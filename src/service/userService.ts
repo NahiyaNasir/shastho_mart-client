@@ -157,10 +157,88 @@ const createOrder = async (payload: any, cookieString?: string) => {
     return { data: null, error: { message: "Something went long" } };
   }
 };
+
+const getMyOrders = async (params?: PgOptionsRs, options?: serviceOptions) => {
+  try {
+    const url = new URL(`${api_url}/api/orders/my-orders`);
+    const cookieStore = await cookies();
+
+    if (params) {
+      Object.entries(params).forEach(([key, value]) => {
+        if (value !== undefined && value !== null && value !== "") {
+          url.searchParams.append(key, value as unknown as string);
+        }
+      });
+    }
+
+    const config: RequestInit = {
+      headers: {
+        "Content-Type": "application/json",
+        Cookie: cookieStore.toString(),
+      },
+      cache: "no-store",
+    };
+
+    if (options?.cache) {
+      config.cache = options.cache;
+    }
+
+    if (options?.revalidate) {
+      config.next = { revalidate: options.revalidate };
+    }
+
+    config.next = { ...config.next, tags: ["my-orders"] };
+
+    const res = await fetch(url.toString(), config);
+    const data = await res.json();
+
+    if (!res.ok) {
+      return {
+        data: null,
+        error: { message: data.message || `Failed to fetch orders (status ${res.status})` },
+        details: data,
+      };
+    }
+
+    return { data, error: null };
+  } catch (err) {
+    return { data: null, error: { message: "Something went wrong on get my orders." } };
+  }
+};
+
+const getOrderById = async (orderId: string) => {
+  try {
+    const cookieStore = await cookies();
+
+    const res = await fetch(`${api_url}/api/orders/${orderId}`, {
+      headers: {
+        "Content-Type": "application/json",
+        Cookie: cookieStore.toString(),
+      },
+      cache: "no-store",
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      return {
+        data: null,
+        error: { message: data.message || "Failed to fetch order!" },
+        details: data,
+      };
+    }
+
+    return { data, error: null };
+  } catch (err) {
+    return { data: null, error: { message: "Something went wrong while fetching the order." } };
+  }
+};
 export const userService = {
   getSession,
   getMedicines,
   createOrder,
   getAllOrders,
+  getMyOrders,
+  getOrderById,
  
 };

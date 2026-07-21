@@ -29,7 +29,7 @@ import * as z from "zod";
 const formSchema = z.object({
   email: z.string().email("Invalid email address."),
   password: z.string().min(8, "The field need at least 08."),
-  callbackURL: z.string().url("Invalid callback URL"),
+ callbackURL: z.string().url(),
   
 
 });
@@ -40,7 +40,7 @@ export function LoginForm({ ...props }: React.ComponentProps<typeof Card>) {
     defaultValues: {
       email: "",
       password: "",
-     callbackURL: "http://localhost:3000",
+     callbackURL: typeof window !== "undefined" ? window.location.origin : "",
     
     },
     validators: {
@@ -51,7 +51,7 @@ export function LoginForm({ ...props }: React.ComponentProps<typeof Card>) {
       try {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { data, error } = await authClient.signIn.email(value);
-        // console.log({ data, error });
+        console.log({ data, error });
         if (error) {
           toast.error(error.message, { id: toastID });
           return;
@@ -72,7 +72,7 @@ export function LoginForm({ ...props }: React.ComponentProps<typeof Card>) {
   const handleGoogleLogin = async () => {
     const data = await authClient.signIn.social({
       provider: "google",
-      callbackURL: "http://localhost:3000",
+     callbackURL: typeof window !== "undefined" ? window.location.origin : "",
     });
     console.log(data);
   };

@@ -1,12 +1,13 @@
 import { getAllOrders } from "@/actions/admin.action";
-import OrderFilters from "@/components/modules/admin/order-filters";
+
 import { Badge } from "@/components/ui/badge";
 
 import { PgOptionsRs } from "@/types/pg.types";
 import { Order, OrderStatus } from "@/types/order.types";
 import { Package } from "lucide-react";
 import PaginationControl from "@/components/shared/paginating";
-
+import OrderFilters from "@/components/shared/order-filters";
+export const dynamic = 'force-dynamic';
 export default async function AdminOrders({
   searchParams,
 }: {

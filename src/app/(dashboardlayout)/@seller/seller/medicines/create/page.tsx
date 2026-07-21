@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { AdminService } from "@/service/admin.service";
 import { X } from "lucide-react";
 
-
+export const dynamic = 'force-dynamic';
 
 export default async function AddMedicinePage() {
   const { data } = await AdminService.getCategories({ limit: 20 });

@@ -1,6 +1,6 @@
 
 import { Footer } from "@/components/layout/Footer";
-import Navbar from "@/components/layout/Navber";
+import Navbar from "@/components/layout/nav";
 import { userService } from "@/service/userService";
 
 export default async function CommonLayout({

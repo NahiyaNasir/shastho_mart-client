@@ -1,6 +1,6 @@
-
 import React from "react";
-import Image from "next/image";
+import Link from "next/link";
+import { Mail, MapPin, Phone } from "lucide-react";
 import { FaFacebook, FaInstagram, FaLinkedin, FaTwitter } from "react-icons/fa";
 
 import { cn } from "@/lib/utils";
@@ -8,8 +8,6 @@ import { cn } from "@/lib/utils";
 interface Footer7Props {
   logo?: {
     url: string;
-    src: string;
-    alt: string;
     title: string;
   };
   className?: string;
@@ -32,34 +30,31 @@ interface Footer7Props {
 
 const defaultSections = [
   {
-    title: "Product",
+    title: "Shop",
     links: [
-      { name: "Overview", href: "#" },
-      { name: "Pricing", href: "#" },
-      { name: "Marketplace", href: "#" },
-      { name: "Features", href: "#" },
+      { name: "Browse Medicines", href: "/shop" },
+      { name: "My Cart", href: "/cart" },
+      { name: "My Orders", href: "/orders" },
     ],
   },
   {
     title: "Company",
     links: [
-      { name: "About", href: "#" },
-      { name: "Team", href: "#" },
-      { name: "Blog", href: "#" },
-      { name: "Careers", href: "#" },
+      { name: "About Us", href: "/about" },
+      { name: "Contact", href: "/contact" },
     ],
   },
   {
-    title: "Resources",
+    title: "Legal",
     links: [
-      { name: "Help", href: "#" },
-      { name: "Sales", href: "#" },
-      { name: "Advertise", href: "#" },
-      { name: "Privacy", href: "#" },
+      { name: "Privacy Policy", href: "/privacy" },
+      { name: "Terms & Conditions", href: "/terms" },
     ],
   },
 ];
 
+// TODO: replace with the project's real social media URLs before
+// deploying to production — these are placeholders.
 const defaultSocialLinks = [
   { icon: <FaInstagram className="size-5" />, href: "#", label: "Instagram" },
   { icon: <FaFacebook className="size-5" />, href: "#", label: "Facebook" },
@@ -68,15 +63,13 @@ const defaultSocialLinks = [
 ];
 
 const defaultLegalLinks = [
-  { name: "Terms and Conditions", href: "#" },
-  { name: "Privacy Policy", href: "#" },
+  { name: "Terms and Conditions", href: "/terms" },
+  { name: "Privacy Policy", href: "/privacy" },
 ];
 
-const Footer= ({
+const Footer = ({
   logo = {
-    url: "https://localhost:3000",
-    src: "https://ibb.co.com/NPRsXnR",
-    alt: "logo",
+    url: "/",
     title: "Shastho-Mart",
   },
   sections = defaultSections,
@@ -87,38 +80,52 @@ const Footer= ({
   className,
 }: Footer7Props) => {
   return (
-    <section className={cn("py-32", className)}>
-      <div className="container mx-auto px-1">
+    <section className={cn("py-16 border-t", className)}>
+      <div className="container mx-auto px-4">
         <div className="flex w-full flex-col justify-between gap-10 lg:flex-row lg:items-start lg:text-left">
-          <div className="flex w-full flex-col justify-between gap-6 lg:items-start">
-            {/* Logo */}
-            <div className="flex items-center gap-2 lg:justify-start">
-              <a href={logo.url}>
-                <Image
-                  src={logo.src}
-                  alt={logo.alt}
-                  title={logo.title}
-                  width={32}
-                  height={32}
-                  className="h-8 w-8"
-                />
-              </a>
-              <h2 className="text-xl font-semibold">{logo.title}</h2>
-            </div>
-            <p className="max-w-[70%] text-sm text-muted-foreground">
+          <div className="flex w-full max-w-sm flex-col justify-between gap-4 lg:items-start">
+            <Link href={logo.url} className="text-xl font-bold">
+              {logo.title}
+            </Link>
+            <p className="text-sm text-muted-foreground">
               {description}
             </p>
+
+            <ul className="space-y-2 text-sm text-muted-foreground">
+              <li className="flex items-center gap-2">
+                <MapPin className="size-4 shrink-0" />
+                Dhaka, Bangladesh
+              </li>
+              <li className="flex items-center gap-2">
+                <Phone className="size-4 shrink-0" />
+                <a href="tel:+8801000000000" className="hover:text-primary">
+                  +880 1000-000000
+                </a>
+              </li>
+              <li className="flex items-center gap-2">
+                <Mail className="size-4 shrink-0" />
+                <a href="mailto:support@shasthomart.com" className="hover:text-primary">
+                  support@shasthomart.com
+                </a>
+              </li>
+            </ul>
+
             <ul className="flex items-center space-x-6 text-muted-foreground">
               {socialLinks.map((social, idx) => (
                 <li key={idx} className="font-medium hover:text-primary">
-                  <a href={social.href} aria-label={social.label}>
+                  <a
+                    href={social.href}
+                    aria-label={social.label}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
                     {social.icon}
                   </a>
                 </li>
               ))}
             </ul>
           </div>
-          <div className="grid w-full gap-6 md:grid-cols-3 lg:gap-20">
+          <div className="grid w-full gap-6 sm:grid-cols-3 lg:gap-20">
             {sections.map((section, sectionIdx) => (
               <div key={sectionIdx}>
                 <h3 className="mb-4 font-bold">{section.title}</h3>
@@ -128,7 +135,7 @@ const Footer= ({
                       key={linkIdx}
                       className="font-medium hover:text-primary"
                     >
-                      <a href={link.href}>{link.name}</a>
+                      <Link href={link.href}>{link.name}</Link>
                     </li>
                   ))}
                 </ul>
@@ -141,7 +148,7 @@ const Footer= ({
           <ul className="order-1 flex flex-col gap-2 md:order-2 md:flex-row">
             {legalLinks.map((link, idx) => (
               <li key={idx} className="hover:text-primary">
-                <a href={link.href}> {link.name}</a>
+                <Link href={link.href}> {link.name}</Link>
               </li>
             ))}
           </ul>

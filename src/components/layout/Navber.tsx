@@ -32,6 +32,7 @@ import { ModelToggle } from "./ModelToggle";
 import { User } from "@/types/user.types";
 import { toast } from "sonner";
 import { authClient } from "@/lib/auth-client";
+import { useCart } from "@/hooks/use-cart";
 // import { TooltipButton } from "../ui/tooltip-button";
 import { UserNav } from "./user-nav";
 
@@ -52,10 +53,7 @@ interface Navbar1Props {
   className?: string;
   logo?: {
     url: string;
-    src: string;
-    alt: string;
     title: string;
-    className?: string;
   };
   menu?: MenuItem[];
   auth?: {
@@ -72,9 +70,7 @@ interface Navbar1Props {
 const Navbar = ({
   user,
   logo = {
-    url: "https://localhost:3000",
-    src: "https://ibb.co.com/NPRsXnR",
-    alt: "logo",
+    url: "/",
     title: "Shastho-Mart",
   },
   menu = [
@@ -87,10 +83,10 @@ const Navbar = ({
       title: "About",
       url: "/about",
     },
-    // {
-    //   title: " Dashboard",
-    //   url: "/seller/dashboard",
-    // },
+    {
+      title: "Contact",
+      url: "/contact",
+    },
   ],
   auth = {
     login: { title: "Login", url: "/login" },
@@ -98,19 +94,8 @@ const Navbar = ({
   },
   className,
 }: Navbar1Props) => {
-  // const handleLogout = async () => {
-  //   const toastId = toast.loading("Logging out...");
-  //   try {
-  //     await authClient.signOut();
-  //     toast.success("Logged out successfully", { id: toastId });
-
-  //     // router.refresh();
-  //   } catch (error) {
-  //     console.log(error);
-  //     toast.error("Failed to logout", { id: toastId });
-  //   }
-  // };
   const router=useRouter();
+  const { itemCount } = useCart();
 
   const handleLogout = async () => {
  
@@ -131,23 +116,17 @@ const Navbar = ({
     toast.error("Failed to logout", { id: toastId });
   }}
   return (
-    <section className={cn("py-4", className)}>
+    <section className={cn("py-4 sticky top-0 z-40 w-full bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/80 border-b", className)}>
       <div className="container mx-auto px-1">
         {/* Desktop Menu */}
         <nav className="hidden items-center justify-between lg:flex">
           <div className="flex items-center gap-6">
             {/* Logo */}
-            <a href={logo.url} className="flex items-center gap-2">
-              {/* <img
-                src={logo.src}
-                className="max-h-8 dark:invert"
-                alt={logo.alt}
-              /> */}
-
+            <Link href={logo.url} className="flex items-center gap-2">
               <span className="text-lg font-semibold tracking-tighter">
                 {logo.title}
               </span>
-            </a>
+            </Link>
             <div className="flex items-center">
               <NavigationMenu>
                 <NavigationMenuList>
@@ -156,8 +135,18 @@ const Navbar = ({
               </NavigationMenu>
             </div>
           </div>
-          <div className="flex gap-2">
+          <div className="flex gap-2 items-center">
             <ModelToggle></ModelToggle>
+            <Button asChild variant="outline" size="icon" className="relative">
+              <Link href="/cart">
+                <ShoppingCart className="size-4" />
+                {itemCount > 0 && (
+                  <span className="absolute -top-1.5 -right-1.5 flex size-4.5 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-primary-foreground">
+                    {itemCount > 9 ? "9+" : itemCount}
+                  </span>
+                )}
+              </Link>
+            </Button>
          {user ? (
   <div className="flex items-center gap-4">
     <UserNav user={user} handleLogout={handleLogout} />
@@ -179,14 +168,23 @@ const Navbar = ({
         <div className="block lg:hidden">
           <div className="flex items-center justify-between">
             {/* Logo */}
-            <a href={logo.url} className="flex items-center gap-2">
-              {/* <img
-                src={logo.src}
-                className="max-h-8 dark:invert"
-                alt={logo.alt}
-              /> */}
-            </a>
-            <Sheet>
+            <Link href={logo.url} className="flex items-center gap-2">
+              <span className="text-lg font-semibold tracking-tighter">
+                {logo.title}
+              </span>
+            </Link>
+            <div className="flex items-center gap-2">
+              <Button asChild variant="outline" size="icon" className="relative">
+                <Link href="/cart">
+                  <ShoppingCart className="size-4" />
+                  {itemCount > 0 && (
+                    <span className="absolute -top-1.5 -right-1.5 flex size-4.5 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-primary-foreground">
+                      {itemCount > 9 ? "9+" : itemCount}
+                    </span>
+                  )}
+                </Link>
+              </Button>
+              <Sheet>
               <SheetTrigger asChild>
                 <Button variant="outline" size="icon">
                   <Menu className="size-4" />
@@ -195,13 +193,9 @@ const Navbar = ({
               <SheetContent className="overflow-y-auto">
                 <SheetHeader>
                   <SheetTitle>
-                    <a href={logo.url} className="flex items-center gap-2">
-                      {/* <img
-                        src={logo.src}
-                        className="max-h-8 dark:invert"
-                        alt={logo.alt}
-                      /> */}
-                    </a>
+                    <Link href={logo.url} className="flex items-center gap-2">
+                      {logo.title}
+                    </Link>
                   </SheetTitle>
                 </SheetHeader>
                 <div className="flex flex-col gap-6 p-4">
@@ -228,19 +222,11 @@ const Navbar = ({
     </Button>
   </div>
 )}
-
-
-
-                    {/* <Button asChild variant="outline">
-                      <Link href={auth.login.url}>{auth.login.title}</Link>
-                    </Button>
-                    <Button asChild>
-                      <Link href={auth.signup.url}>{auth.signup.title}</Link>
-                    </Button> */}
                   </div>
                 </div>
               </SheetContent>
             </Sheet>
+            </div>
           </div>
         </div>
       </div>

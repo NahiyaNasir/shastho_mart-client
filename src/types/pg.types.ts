@@ -9,6 +9,7 @@
   sortOrder?: string;
   status?: string;
   search?: string;
+    categoryId?: string;
 }
   export   interface serviceOptions {
   cache?: RequestCache;

@@ -39,8 +39,8 @@ export function RegisterForm({ ...props }: React.ComponentProps<typeof Card>) {
       name: "",
       email: "",
       password: "",
-      callbackURL: "/",
-  
+      callbackURL: typeof window !== "undefined" ? window.location.origin : "",
+    
     },
     validators: {
       onSubmit: formSchema,

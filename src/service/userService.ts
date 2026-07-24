@@ -233,12 +233,59 @@ const getOrderById = async (orderId: string) => {
     return { data: null, error: { message: "Something went wrong while fetching the order." } };
   }
 };
+const getStats = async () => {
+  try {
+    const res = await fetch(`${api_url}/api/stats`, {
+      cache: "no-store",
+    });
+    const data = await res.json();
+    return { data, error: null };
+  } catch (err) {
+    return { data: null, error: { message: "Something went wrong on get stats." } };
+  }
+};
+
+// Public — used by the homepage's "Testimonials" section.
+const getReviews = async (params?: PgOptionsRs, options?: serviceOptions) => {
+  try {
+    const url = new URL(`${api_url}/api/review`);
+
+    if (params) {
+      Object.entries(params).forEach(([key, value]) => {
+        if (value !== undefined && value !== null && value !== "") {
+          url.searchParams.append(key, value as unknown as string);
+        }
+      });
+    }
+
+    const config: RequestInit = {
+      cache: "no-store",
+    };
+
+    if (options?.cache) {
+      config.cache = options.cache;
+    }
+
+    if (options?.revalidate) {
+      config.next = { revalidate: options.revalidate };
+    }
+
+    const res = await fetch(url.toString(), config);
+    const data = await res.json();
+    return { data, error: null };
+  } catch (err) {
+    return { data: null, error: { message: "Something went wrong on get reviews." } };
+  }
+};
+
 export const userService = {
   getSession,
   getMedicines,
   createOrder,
   getAllOrders,
+  getStats,
   getMyOrders,
   getOrderById,
+  getReviews,
  
 };

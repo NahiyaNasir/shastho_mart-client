@@ -35,3 +35,15 @@ export const getOrderById = async (orderId: string) => {
   return res;
 }
 
+export const getStats = async () => {
+  const res = await userService.getStats();
+  return res;
+};
+
+export const getReviews = async (
+  params?: PgOptionsRs,
+  options?: serviceOptions,
+) => {
+  const res = await userService.getReviews(params, options);
+  return res;
+};

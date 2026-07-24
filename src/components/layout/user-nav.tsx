@@ -7,7 +7,7 @@ import {
   ShoppingCart, 
   PackageOpen, 
   LogOut, 
-  // User as UserIcon 
+  User as UserIcon 
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -22,7 +22,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
  
 export function UserNav({ user, handleLogout }: { user: any, handleLogout: () => void }) {
-//  console.log(user,"usernav");
+//  console.log(user,"user nav");
   return (
   
     <DropdownMenu>
@@ -79,6 +79,13 @@ export function UserNav({ user, handleLogout }: { user: any, handleLogout: () =>
             </DropdownMenuItem>
           </>
         )}
+
+        <DropdownMenuItem asChild>
+          <Link href="/profile" className="cursor-pointer">
+            <UserIcon className="mr-2 h-4 w-4" />
+            <span>Profile</span>
+          </Link>
+        </DropdownMenuItem>
 
         <DropdownMenuSeparator />
         

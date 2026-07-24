@@ -12,10 +12,17 @@ import { ShoppingBag } from "lucide-react";
 export default async function Shop({
   searchParams,
 }: {
-  searchParams: Promise<PgOptionsRs>;
+  searchParams: Promise<PgOptionsRs & { category?: string }>;
 }) {
-  const { page, search, sortBy, sortOrder } = await searchParams;
-  const { data } = await getAllMedicines({ search, page, sortBy, sortOrder });
+  const { page, search, sortBy, sortOrder, category } = await searchParams;
+  const { data } = await getAllMedicines({
+    search,
+    page,
+    sortBy,
+    sortOrder,
+    // the backend's filterableFields expects "categoryId", not "category"
+    ...(category ? { categoryId: category } : {}),
+  });
   const medicines = data?.data || [];
   const pagination = data?.meta;
   return (

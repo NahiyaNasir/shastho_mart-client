@@ -27,21 +27,19 @@ const buildQueryString = (params?: PgOptionsRs): string => {
   return searchParams.toString();
 };
 
-const createMedicine = async (payload: unknown) => {
+const createMedicine = async (payload: any, cookieString?: string) => {
   try {
-    const cookieStore = await cookies();
-
-    const res = await fetch(`${env.API_URL}/api/medicine`, {
+    const res = await fetch(`${env.API_URL}/seller/medicines`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Cookie: cookieStore.toString(),
+        ...(cookieString && { Cookie: cookieString }),
       },
       body: JSON.stringify(payload),
     });
 
     const data = await res.json();
-    // console.log(data, "medicine creation response"); // Debug log
+
     if (data.error) {
       return {
         data: null,
@@ -49,24 +47,22 @@ const createMedicine = async (payload: unknown) => {
         details: data,
       };
     }
-    return { data, error: null };   
+    return { data, error: null };
   } catch (err) {
-    return {
-      data: null,
-      error: { message: "Something went wrong while creating medicine." },
-    };
+    return { data: null, error: { message: "Something went long" } };
   }
 };
-const getSellerMetadata = async (options?: serviceOptions) => {
+const getSellerMetadata = async (
+  options?: serviceOptions,
+  cookieString?: string,
+) => {
   try {
     const url = new URL(`${api_url}/seller/metadata`);
-    const cookieStore = await cookies();
 
     const config: RequestInit = {
       headers: {
         "Content-Type": "application/json",
-
-        Cookie: cookieStore.toString(),
+        ...(cookieString && { Cookie: cookieString }),
       },
       cache: "no-store",
     };
@@ -92,6 +88,7 @@ const getSellerMetadata = async (options?: serviceOptions) => {
     };
   }
 };
+
 const getMedicines = async (
   params?: PgOptionsRs,
   options?: serviceOptions,
@@ -230,29 +227,22 @@ const deleteSellerMedicine = async (
   }
 };
 const getSellerMedicines = async (
-  sellerId: string,
   params?: PgOptionsRs,
   options?: serviceOptions,
+  cookieString?: string,
 ) => {
   try {
-    const url = new URL(`${api_url}/api/medicine`);
-    url.searchParams.append("sellerId", sellerId);
-    const cookieStore = await cookies();
-
-    if (params) {
-      Object.entries(params).forEach(([key, value]) => {
-        if (value !== undefined && value !== null && value !== "") {
-          url.searchParams.append(key, value as unknown as string);
-        }
-      });
-    }
+    const queryString = buildQueryString(params);
+    const url = queryString
+      ? `${api_url}/seller/medicines?${queryString}`
+      : `${api_url}/seller/medicines`;
 
     const config: RequestInit = {
       headers: {
         "Content-Type": "application/json",
-        Cookie: cookieStore.toString(),
+        ...(cookieString && { Cookie: cookieString }),
       },
-      cache: "no-store",
+      cache: "no-cache",
     };
 
     if (options?.cache) {
@@ -263,24 +253,19 @@ const getSellerMedicines = async (
       config.next = { revalidate: options.revalidate };
     }
 
-    config.next = { ...config.next, tags: ["seller-medicines"] };
+    config.next = { ...config.next };
 
-    const res = await fetch(url.toString(), config);
+    const res = await fetch(url, config);
     const data = await res.json();
-
-    if (!res.ok) {
-      return {
-        data: null,
-        error: { message: data.message || `Failed to fetch medicines (status ${res.status})` },
-        details: data,
-      };
-    }
 
     return { data, error: null };
   } catch (err) {
-    return { data: null, error: { message: "Something went wrong on get seller medicines." } };
+    return {
+      data: null,
+      error: { message: "Something went wrong on get medicines." },
+    };
   }
-}
+};
 export const SellerService = {
  
   createMedicine,

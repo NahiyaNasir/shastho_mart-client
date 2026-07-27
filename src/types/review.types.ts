@@ -13,6 +13,7 @@ export interface Review {
   };
   medicine: {
     name: string;
-    manufacturer: string | null;
+    genericName: string;
+    image: string;
   };
 }

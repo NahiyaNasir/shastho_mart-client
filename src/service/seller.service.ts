@@ -3,7 +3,6 @@
 import { env } from "@/env";
 import { PgOptionsRs, serviceOptions } from "@/types/pg.types";
 
-import { cookies } from "next/headers";
 const api_url = env.API_URL;
 
 const buildQueryString = (params?: PgOptionsRs): string => {
@@ -29,7 +28,7 @@ const buildQueryString = (params?: PgOptionsRs): string => {
 
 const createMedicine = async (payload: any, cookieString?: string) => {
   try {
-    const res = await fetch(`${env.API_URL}/seller/medicines`, {
+    const res = await fetch(`${env.API_URL}/api/medicine`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -40,24 +39,25 @@ const createMedicine = async (payload: any, cookieString?: string) => {
 
     const data = await res.json();
 
-    if (data.error) {
+    if (!res.ok || data.error) {
       return {
         data: null,
-        error: { message: data.error || "Medicine not created!" },
+        error: { message: data.message || data.error || "Medicine not created!" },
         details: data,
       };
     }
     return { data, error: null };
   } catch (err) {
-    return { data: null, error: { message: "Something went long" } };
+    return { data: null, error: { message: "Network or server error while creating medicine." } };
   }
 };
+
 const getSellerMetadata = async (
   options?: serviceOptions,
   cookieString?: string,
 ) => {
   try {
-    const url = new URL(`${api_url}/seller/metadata`);
+    const url = new URL(`${api_url}/api/stats`);
 
     const config: RequestInit = {
       headers: {
@@ -97,8 +97,8 @@ const getMedicines = async (
   try {
     const queryString = buildQueryString(params);
     const url = queryString
-      ? `${api_url}/seller/medicines?${queryString}`
-      : `${api_url}/seller/medicines`;
+      ? `${api_url}/api/medicine?${queryString}`
+      : `${api_url}/api/medicine`;
 
     const config: RequestInit = {
       headers: {
@@ -129,13 +129,14 @@ const getMedicines = async (
     };
   }
 };
+
 const updateOrderStatus = async (
   id: string,
   payload: any,
   cookieString?: string,
 ) => {
   try {
-    const res = await fetch(`${env.API_URL}/seller/orders/${id}`, {
+    const res = await fetch(`${env.API_URL}/api/orders/${id}/seller`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
@@ -146,16 +147,16 @@ const updateOrderStatus = async (
 
     const data = await res.json();
 
-    if (data.error) {
+    if (!res.ok || data.error) {
       return {
         data: null,
-        error: { message: data.error || "Order not updated!" },
+        error: { message: data.message || data.error || "Order not updated!" },
         details: data,
       };
     }
     return { data, error: null };
   } catch (err) {
-    return { data: null, error: { message: "Something went long" } };
+    return { data: null, error: { message: "Something went wrong" } };
   }
 };
 
@@ -167,8 +168,8 @@ const getSellerAllOrders = async (
   try {
     const queryString = buildQueryString(params);
     const url = queryString
-      ? `${api_url}/seller/orders?${queryString}`
-      : `${api_url}/seller/orders`;
+      ? `${api_url}/api/orders/seller/orders?${queryString}`
+      : `${api_url}/api/orders/seller/orders`;
 
     const config: RequestInit = {
       headers: {
@@ -199,12 +200,13 @@ const getSellerAllOrders = async (
     };
   }
 };
+
 const deleteSellerMedicine = async (
   id: string,
   cookieString?: string,
 ) => {
   try {
-    const url = new URL(`${api_url}/seller/medicines/${id}`);
+    const url = new URL(`${api_url}/api/medicine/${id}`);
 
     const config: RequestInit = {
       method: 'DELETE',
@@ -226,6 +228,7 @@ const deleteSellerMedicine = async (
     };
   }
 };
+
 const getSellerMedicines = async (
   params?: PgOptionsRs,
   options?: serviceOptions,
@@ -234,8 +237,8 @@ const getSellerMedicines = async (
   try {
     const queryString = buildQueryString(params);
     const url = queryString
-      ? `${api_url}/seller/medicines?${queryString}`
-      : `${api_url}/seller/medicines`;
+      ? `${api_url}/api/medicine?${queryString}`
+      : `${api_url}/api/medicine`;
 
     const config: RequestInit = {
       headers: {
@@ -266,8 +269,8 @@ const getSellerMedicines = async (
     };
   }
 };
+
 export const SellerService = {
- 
   createMedicine,
   getSellerMetadata,
   getSellerMedicines,
@@ -275,5 +278,4 @@ export const SellerService = {
   updateOrderStatus,
   getSellerAllOrders,
   deleteSellerMedicine,
-  
 };

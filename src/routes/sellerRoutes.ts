@@ -1,33 +1,36 @@
 import { Route } from "@/types/route.types";
 
-
-
-
 export const sellerRoutes: Route[] = [
   {
-    title: "General",
-      url: "#",
-   
-      
+    title: "Overview",
+    url: "#",
     items: [
       {
         title: "Dashboard",
-        url: "/dashboard",
+        url: "/seller/dashboard",
       },
       {
-        title: "Add Medicine",
+        title: "Back to Home",
+        url: "/",
+      },
+    ],
+  },
+  {
+    title: "Store Management",
+    url: "#",
+    items: [
+      {
+        title: "My Medicines",
+        url: "/seller/medicines",
+      },
+      {
+        title: "Add New Medicine",
         url: "/seller/medicines/create",
       },
       {
-        title: "Order",
+        title: "Customer Orders",
         url: "/seller/orders",
       },
-      {
-        title: "Home",
-        url: "/",
-       
-      },
-
     ],
   },
 ];

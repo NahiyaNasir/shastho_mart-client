@@ -7,7 +7,7 @@ import { NewsletterSection } from "@/components/layout/NewsletterSection";
 import { StatsSection } from "@/components/layout/StatsSection";
 import { TestimonialsSection } from "@/components/layout/TestimonialsSection";
 import { WhyChooseUsSection } from "@/components/layout/WhyChooseUsSection";
-
+export const dynamic = 'force-dynamic';
 
 
 const page = () => {

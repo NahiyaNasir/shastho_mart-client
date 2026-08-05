@@ -12,7 +12,7 @@ export const sidebarConfig = {
   [Roles.ADMIN]: [
     {
       title: "Dashboard",
-      href: "/dashboard",
+      href: "/admin",
       icon: LayoutDashboard,
     },
     {
@@ -21,14 +21,14 @@ export const sidebarConfig = {
       icon: Package,
     },
     {
-      title: "Sellers",
-      href: "/admin/sellers",
-      icon: Store,
+      title: "All Users",
+      href: "/admin/users",
+      icon: Users,
     },
     {
-      title: "Customers",
-      href: "/admin/customers",
-      icon: Users,
+      title: "All Orders",
+      href: "/admin/orders",
+      icon: ShoppingCart,
     },
     {
       title: "Settings",
@@ -40,22 +40,22 @@ export const sidebarConfig = {
   [Roles.SELLER]: [
     {
       title: "Dashboard",
-      href: "/dashboard",
+      href: "/seller/dashboard",
       icon: LayoutDashboard,
     },
     {
       title: "Medicines",
-      href: "/dashboard/medicine",
+      href: "/seller/medicines",
       icon: Package,
     },
     {
       title: "Orders",
-      href: "/dashboard/orders",
+      href: "/seller/orders",
       icon: ShoppingCart,
     },
     {
       title: "Settings",
-      href: "/dashboard/settings",
+      href: "/seller/settings",
       icon: Settings,
     },
   ],

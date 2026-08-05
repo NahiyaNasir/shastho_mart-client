@@ -56,7 +56,7 @@ export default function MedicineCard({ medicine }: { medicine:IMedicine}) {
               </h3>
             </Link>
             <p className="text-slate-500 text-[10px] font-bold uppercase tracking-widest italic">
-              {medicine.manufacturer || "Generic Pharma"}
+              {medicine.genericName|| "Generic Pharma"}
             </p>
           </div>
           

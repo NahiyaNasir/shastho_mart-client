@@ -1,4 +1,4 @@
-import { getAllMedicines } from "@/actions/user.action";
+import { getAllMedicines, getAllCategories } from "@/actions/user.action";
 import MedicineCard from "@/components/layout/MedicineCard";
 import ShopControls from "@/components/modules/customer/ShopControls";
 import PaginationControl from "@/components/shared/paginating";
@@ -25,6 +25,11 @@ export default async function Shop({
   });
   const medicines = data?.data || [];
   const pagination = data?.meta;
+  
+  // Fetch categories for the filter
+  const { data: categoriesData } = await getAllCategories();
+  const categories = categoriesData?.data || [];
+
   return (
     <div className="min-h-screen bg-slate-50/50 pb-20">
       {/* Header */}
@@ -42,7 +47,7 @@ export default async function Shop({
       <div className="container mx-auto px-4">
         {/* Controls: Search, SortBy, SortOrder */}
         <div className="mb-10">
-          <ShopControls />
+          <ShopControls categories={categories} />
         </div>
 
         {/* Medicines Grid */}

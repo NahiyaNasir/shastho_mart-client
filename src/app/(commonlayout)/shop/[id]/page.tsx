@@ -1,14 +1,19 @@
-import { getSingleMedicine } from "@/actions/user.action";
+import { getAllMedicines, getSingleMedicine } from "@/actions/user.action";
 import { ChevronLeft, Pill, RotateCcw, ShieldCheck, Star, Stethoscope, Truck } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import MedicineDetailActions from "@/components/modules/customer/medicine-detail-actions";
+import MedicineCard from "@/components/layout/MedicineCard";
+import { IMedicine } from "@/types/medicine.types";
 export default async function   ShopDetailPage({ params }: { params: Promise<{ id: string }> }) {
     const { id } =  await  params;
       const { data } = await getSingleMedicine(id);
-      const medicine= data?.data
+      const medicine= data?.data;
+      
+      const relatedRes = await getAllMedicines({ categoryId: medicine?.categoryId, limit: 5 });
+      const relatedMedicines = relatedRes.data?.data?.filter((m: IMedicine) => m.id !== id).slice(0, 4) || [];
 
       if (!medicine) {
         return (
@@ -183,6 +188,23 @@ export default async function   ShopDetailPage({ params }: { params: Promise<{ i
           </div>
         </div>
       </main>
+
+      {/* 7. Related Medicines */}
+      {relatedMedicines.length > 0 && (
+        <section className="container mx-auto px-4 mt-16 mb-8">
+          <div className="flex items-center justify-between mb-8">
+            <h2 className="text-2xl font-bold text-slate-900 tracking-tight">Related Medicines</h2>
+            <Link href={`/shop?category=${medicine.categoryId}`} className="text-primary font-semibold hover:underline text-sm">
+              View All
+            </Link>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            {relatedMedicines.map((relatedMed: IMedicine) => (
+              <MedicineCard key={relatedMed.id} medicine={relatedMed} />
+            ))}
+          </div>
+        </section>
+      )}
     </div>
 
     )

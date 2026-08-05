@@ -16,6 +16,11 @@ export const getSingleMedicine = async (medicineId: string) => {
   const res = await AdminService.singleMedicineData(medicineId);
   return res;
 }
+
+export const getAllCategories = async () => {
+  const res = await AdminService.getCategories();
+  return res;
+}
 export const createOrder = async (data: any) => {
   const cookieStore = await cookies();
   const res = await userService.createOrder(data, cookieStore.toString());

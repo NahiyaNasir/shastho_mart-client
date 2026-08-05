@@ -145,6 +145,44 @@ export function LoginForm({ ...props }: React.ComponentProps<typeof Card>) {
         >
           Continue with Google
         </Button>
+        <div className="flex flex-col gap-2 mt-4 pt-4 border-t border-slate-100">
+          <p className="text-xs text-center text-slate-500 font-semibold mb-2">DEMO LOGINS</p>
+          <div className="grid grid-cols-3 gap-2">
+            <Button
+              type="button"
+              variant="secondary"
+              className="text-xs h-8"
+              onClick={() => {
+                form.setFieldValue("email", "admin@gmail.com");
+                form.setFieldValue("password", "admin123");
+              }}
+            >
+              Admin
+            </Button>
+            <Button
+              type="button"
+              variant="secondary"
+              className="text-xs h-8"
+              onClick={() => {
+                form.setFieldValue("email", "seller@gmail.com");
+                form.setFieldValue("password", "seller123");
+              }}
+            >
+              Seller
+            </Button>
+            <Button
+              type="button"
+              variant="secondary"
+              className="text-xs h-8"
+              onClick={() => {
+                form.setFieldValue("email", "user@gmail.com");
+                form.setFieldValue("password", "user1234");
+              }}
+            >
+              Customer
+            </Button>
+          </div>
+        </div>
             </FieldGroup>
           </form>
         </CardContent>

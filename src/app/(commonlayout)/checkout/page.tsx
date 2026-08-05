@@ -20,9 +20,9 @@ export default function CheckoutPage() {
   if (items.length === 0) {
     return (
       <div className="min-h-[60vh] flex flex-col items-center justify-center gap-4 text-center px-4">
-        <ShoppingBag className="size-16 text-slate-200" />
-        <h1 className="text-2xl font-bold text-slate-800">Your cart is empty</h1>
-        <p className="text-slate-500">Add some medicines before checking out.</p>
+        <ShoppingBag className="size-16 text-muted-foreground/40" />
+        <h1 className="text-2xl font-bold text-foreground">Your cart is empty</h1>
+        <p className="text-muted-foreground">Add some medicines before checking out.</p>
         <Button asChild className="mt-2">
           <Link href="/shop">Go to Shop</Link>
         </Button>
@@ -56,43 +56,44 @@ export default function CheckoutPage() {
 
   return (
     <div className="container mx-auto px-4 py-10 max-w-3xl">
-      <h1 className="text-3xl font-black text-slate-950 mb-8">Checkout</h1>
+      <h1 className="text-3xl font-black text-foreground mb-8">Checkout</h1>
 
       <div className="space-y-6">
-        <div className="border border-slate-200 rounded-2xl p-6 bg-white space-y-3">
-          <h2 className="font-bold text-lg text-slate-900">Shipping Address</h2>
-          <Label htmlFor="address">Full delivery address</Label>
+        <div className="border border-border rounded-2xl p-6 bg-card text-card-foreground shadow-sm space-y-3">
+          <h2 className="font-bold text-lg text-foreground">Shipping Address</h2>
+          <Label htmlFor="address" className="text-foreground/90 font-medium">Full delivery address</Label>
           <Textarea
             id="address"
             placeholder="House, road, area, city, postal code..."
             value={address}
             onChange={(e) => setAddress(e.target.value)}
             rows={4}
+            className="bg-background text-foreground border-input placeholder:text-muted-foreground focus-visible:ring-primary"
           />
         </div>
 
-        <div className="border border-slate-200 rounded-2xl p-6 bg-white space-y-3">
-          <h2 className="font-bold text-lg text-slate-900">Order Summary</h2>
-          <ul className="divide-y">
+        <div className="border border-border rounded-2xl p-6 bg-card text-card-foreground shadow-sm space-y-3">
+          <h2 className="font-bold text-lg text-foreground">Order Summary</h2>
+          <ul className="divide-y divide-border">
             {items.map((item) => (
-              <li key={item.medicineId} className="py-2 flex justify-between text-sm">
-                <span className="text-slate-600">
+              <li key={item.medicineId} className="py-3 flex justify-between text-sm">
+                <span className="text-muted-foreground font-medium">
                   {item.name} &times; {item.quantity}
                 </span>
-                <span className="font-semibold text-slate-900">
+                <span className="font-semibold text-foreground">
                   ${(item.price * item.quantity).toFixed(2)}
                 </span>
               </li>
             ))}
           </ul>
-          <div className="border-t pt-4 flex justify-between font-black text-xl text-slate-950">
+          <div className="border-t border-border pt-4 flex justify-between font-black text-xl text-foreground">
             <span>Total (Cash on Delivery)</span>
-            <span>${subtotal.toFixed(2)}</span>
+            <span className="text-primary">${subtotal.toFixed(2)}</span>
           </div>
         </div>
 
         <Button
-          className="w-full h-14 rounded-2xl text-lg font-bold"
+          className="w-full h-14 rounded-2xl text-lg font-bold shadow-md"
           onClick={handlePlaceOrder}
           disabled={isSubmitting}
         >

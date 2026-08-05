@@ -15,19 +15,15 @@ import {
 } from "@/components/ui/select";
 import { createMedicine } from "@/actions/seller.action";
 import { toast } from "sonner";
-import { useRouter } from "next/navigation"; // 2. Add router import
+import { useRouter } from "next/navigation";
 
 const medicineSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
   description: z.string().optional(),
-  // Use z.number() for strict typing with TanStack Form
   price: z.number().positive("Price must be greater than 0"),
   stock: z.number().int().nonnegative("Stock cannot be negative"),
   manufacturer: z.string().optional(),
   categoryId: z.string().min(1, "Category is required"),
-  // sellerId is intentionally NOT collected here — the backend derives it
-  // from the authenticated session (req.user.id), so trusting a client-
-  // supplied sellerId would let anyone list medicines under another seller.
 });
 
 type MedicineFormValues = z.infer<typeof medicineSchema>;
@@ -58,22 +54,30 @@ export default function MedicineForm({ categories = [] }: MedicineFormProps) {
     },
     onSubmit: async ({ value }) => {
       const toastId = toast.loading("Saving to inventory...");
-      const res = await createMedicine(value);
+      
+      const payload = {
+        ...value,
+        genericName: value.name,
+        overview: value.description || value.name,
+        image: "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=500&auto=format&fit=crop&q=60",
+      };
+
+      const res = await createMedicine(payload);
 
       if (res?.error) {
-         return toast.warning("Medicine already exist", {
+        return toast.error(res.error.message || "Failed to create medicine", {
           id: toastId,
         });
       }
 
-      toast.success("Medicine added!", { id: toastId });
+      toast.success("Medicine added successfully!", { id: toastId });
       router.push("/seller/medicines");
     },
   });
 
   return (
-    <div className="max-w-2xl mx-auto p-6 bg-card border rounded-xl shadow-sm">
-      <h2 className="text-2xl font-bold mb-6">Add New Medicine</h2>
+    <div className="max-w-2xl mx-auto p-6 bg-card border border-border rounded-2xl shadow-sm">
+      <h2 className="text-2xl font-bold mb-6 text-foreground">Add New Medicine</h2>
 
       <form
         onSubmit={(e) => {
@@ -93,6 +97,7 @@ export default function MedicineForm({ categories = [] }: MedicineFormProps) {
                 value={field.state.value}
                 onBlur={field.handleBlur}
                 onChange={(e) => field.handleChange(e.target.value)}
+                placeholder="e.g. Paracetamol 500mg"
               />
               {field.state.meta.errors && (
                 <p className="text-destructive text-xs italic">
@@ -113,7 +118,6 @@ export default function MedicineForm({ categories = [] }: MedicineFormProps) {
                   type="number"
                   step="0.01"
                   value={field.state.value}
-                  // 4. Use valueAsNumber to keep TypeScript happy
                   onChange={(e) => field.handleChange(e.target.valueAsNumber)}
                 />
               </div>
@@ -143,6 +147,7 @@ export default function MedicineForm({ categories = [] }: MedicineFormProps) {
               <Textarea
                 value={field.state.value}
                 onChange={(e) => field.handleChange(e.target.value)}
+                placeholder="Enter medicine dosage and details..."
               />
             </div>
           )}
@@ -186,7 +191,7 @@ export default function MedicineForm({ categories = [] }: MedicineFormProps) {
           selector={(state) => [state.canSubmit, state.isSubmitting]}
         >
           {([canSubmit, isSubmitting]) => (
-            <Button type="submit" disabled={!canSubmit} className="w-full mt-4">
+            <Button type="submit" disabled={!canSubmit} className="w-full mt-4 h-11 font-bold">
               {isSubmitting ? "Saving..." : "Create Medicine"}
             </Button>
           )}

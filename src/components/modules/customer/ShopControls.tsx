@@ -4,17 +4,25 @@ import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 import { Input } from "@/components/ui/input";
-import { Search, ArrowDownUp, SortAsc, History, DollarSign, Type } from "lucide-react";
+import { Search, ArrowDownUp, SortAsc, History, DollarSign, Type, LayoutGrid } from "lucide-react";
+import { ICategory } from "@/types/medicine.types";
 
-export default function ShopControls() {
+interface ShopControlsProps {
+  categories?: ICategory[];
+}
+
+export default function ShopControls({ categories = [] }: ShopControlsProps) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
   const handleUpdateQuery = (key: string, value: string) => {
     const params = new URLSearchParams(searchParams.toString());
-    if (value) params.set(key, value);
+    if (value && value !== "all") params.set(key, value);
     else params.delete(key);
+    // Reset to page 1 when filters change
+    if (key !== "page") params.set("page", "1");
+    
     router.push(`${pathname}?${params.toString()}`);
   };
 
@@ -31,8 +39,32 @@ export default function ShopControls() {
         />
       </div>
 
-      {/* Sort Section */}
+      {/* Filters & Sort Section */}
       <div className="flex items-center gap-1.5 bg-white p-1.5 rounded-xl border border-slate-200 shadow-sm w-full lg:w-auto overflow-x-auto">
+        
+        {/* Category Filter */}
+        <div className="flex items-center gap-2 px-2">
+          <span className="text-[10px] font-bold uppercase text-slate-400">Category</span>
+          <Select onValueChange={(v) => handleUpdateQuery("category", v)} defaultValue={searchParams.get("category") || "all"}>
+            <SelectTrigger className="w-32 h-9 border-0! focus:ring-0! bg-transparent font-semibold">
+              <SelectValue placeholder="All Categories" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">
+                <div className="flex items-center gap-2"><LayoutGrid className="size-3.5"/>All</div>
+              </SelectItem>
+              {categories.map((cat) => (
+                <SelectItem key={cat.id} value={cat.id}>
+                  {cat.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+
+        <Separator orientation="vertical" className="h-6" />
+
+        {/* SortBy */}
         <div className="flex items-center gap-2 px-2">
           <span className="text-[10px] font-bold uppercase text-slate-400">SortBy</span>
           <Select onValueChange={(v) => handleUpdateQuery("sortBy", v)} defaultValue={searchParams.get("sortBy") || "createdAt"}>
@@ -49,6 +81,7 @@ export default function ShopControls() {
 
         <Separator orientation="vertical" className="h-6" />
 
+        {/* Sort Order */}
         <div className="flex items-center gap-2 px-2">
           <span className="text-[10px] font-bold uppercase text-slate-400">Order</span>
           <Select onValueChange={(v) => handleUpdateQuery("sortOrder", v)} defaultValue={searchParams.get("sortOrder") || "desc"}>
@@ -61,6 +94,7 @@ export default function ShopControls() {
             </SelectContent>
           </Select>
         </div>
+
       </div>
     </div>
   );

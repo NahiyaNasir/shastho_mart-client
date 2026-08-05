@@ -99,8 +99,8 @@ const getAllOrders = async (params?: PgOptionsRs, options?: serviceOptions, cook
   try {
     const queryString = buildQueryString(params);
     const url = queryString
-      ? `${api_url}/orders?${queryString}`
-      : `${api_url}/orders`;
+      ? `${api_url}/api/orders?${queryString}`
+      : `${api_url}/api/orders`;
 
     const config: RequestInit = {
       headers: {
@@ -134,7 +134,7 @@ const getAllOrders = async (params?: PgOptionsRs, options?: serviceOptions, cook
 
 const createOrder = async (payload: any, cookieString?: string) => {
   try {
-    const res = await fetch(`${env.API_URL}/orders`, {
+    const res = await fetch(`${env.API_URL}/api/orders`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -154,7 +154,7 @@ const createOrder = async (payload: any, cookieString?: string) => {
     }
     return { data, error: null };
   } catch (err) {
-    return { data: null, error: { message: "Something went long" } };
+    return { data: null, error: { message: "Something went wrong" } };
   }
 };
 

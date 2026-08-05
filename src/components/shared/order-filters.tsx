@@ -22,10 +22,10 @@ export default function OrderFilters() {
   return (
     <div className="flex flex-col sm:flex-row items-center gap-3">
       <div className="relative w-full sm:max-w-xs">
-        <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 size-4 text-slate-400" />
+        <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
         <Input
           placeholder="Search by customer name/email..."
-          className="pl-11 h-10 bg-white"
+          className="pl-11 h-10 bg-background text-foreground border-input"
           onChange={(e) => handleUpdateQuery("search", e.target.value)}
           defaultValue={searchParams.get("search") || ""}
         />
@@ -35,7 +35,7 @@ export default function OrderFilters() {
         onValueChange={(v) => handleUpdateQuery("status", v)}
         defaultValue={searchParams.get("status") || "ALL"}
       >
-        <SelectTrigger className="w-full sm:w-48 h-10 bg-white">
+        <SelectTrigger className="w-full sm:w-48 h-10 bg-background text-foreground border-input">
           <SelectValue placeholder="Filter by status" />
         </SelectTrigger>
         <SelectContent>

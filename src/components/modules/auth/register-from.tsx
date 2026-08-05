@@ -24,12 +24,14 @@ import { useRouter } from "next/navigation";
 // import { redirect } from "next/navigation";
 import { toast } from "sonner";
 import * as z from "zod";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 const formSchema = z.object({
   name: z.string().min(4, "This field is required."),
   email: z.string().email("Invalid email address."),
-  password: z.string().min(8, "The field need at least 08."),
-     callbackURL:z.string().url()
+  password: z.string().min(8, "The field needs at least 8 characters.").regex(/[A-Z]/, "Must contain at least one uppercase letter").regex(/[0-9]/, "Must contain at least one number"),
+  role: z.enum(["CUSTOMER", "SELLER"]),
+  callbackURL:z.string().url()
 });
 
 export function RegisterForm({ ...props }: React.ComponentProps<typeof Card>) {
@@ -39,6 +41,7 @@ export function RegisterForm({ ...props }: React.ComponentProps<typeof Card>) {
       name: "",
       email: "",
       password: "",
+      role: "CUSTOMER",
       callbackURL: typeof window !== "undefined" ? window.location.origin : "",
     
     },
@@ -153,6 +156,29 @@ export function RegisterForm({ ...props }: React.ComponentProps<typeof Card>) {
                       {isValid && (
                         <FieldError errors={field.state.meta.errors} />
                       )}
+                    </Field>
+                  );
+                }}
+              </form.Field>
+
+              <form.Field name="role">
+                {(field) => {
+                  return (
+                    <Field>
+                      <FieldLabel htmlFor="role-select">Register As</FieldLabel>
+                      <Select
+                        onValueChange={(value) => field.handleChange(value as "CUSTOMER" | "SELLER")}
+                        defaultValue={field.state.value}
+                      >
+                        <SelectTrigger id="role-select" className="w-full">
+                          <SelectValue placeholder="Select a role" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="CUSTOMER">Customer</SelectItem>
+                          <SelectItem value="SELLER">Seller</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <FieldError errors={field.state.meta.errors} />
                     </Field>
                   );
                 }}

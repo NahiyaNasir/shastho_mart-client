@@ -78,7 +78,8 @@ const createCategory = async (payload: unknown) => {
     return { data, error: null };
  
   } catch (err) {
-    return { data: null, error: { message: "Something went long" } };
+    console.error("Error in createCategory:", err);
+    return { data: null, error: { message: "Something went wrong" } };
   }
 };
 const getUsers = async (

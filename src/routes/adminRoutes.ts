@@ -1,30 +1,36 @@
 import { Route } from "@/types/route.types";
 
-
 export const adminRoutes: Route[] = [
   {
-    title: "User Management",
-    url:"",
+    title: "Overview",
+    url: "#",
     items: [
       {
-        title: "categories",
-        url: "/admin/categories"
-      },
-      
-      {
-        title: "orders",
-        url: "/admin/orders"
+        title: "Dashboard",
+        url: "/admin",
       },
       {
-        title: "user",
-        url: "/admin/users"
-      },
- {
-        title: "Home",
+        title: "Back to Home",
         url: "/",
-       
       },
-
+    ],
+  },
+  {
+    title: "Management",
+    url: "#",
+    items: [
+      {
+        title: "Categories",
+        url: "/admin/categories",
+      },
+      {
+        title: "Orders",
+        url: "/admin/orders",
+      },
+      {
+        title: "Users",
+        url: "/admin/users",
+      },
     ],
   },
 ];

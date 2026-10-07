@@ -31,7 +31,7 @@ export function AdminCharts() {
           <CardDescription>Monthly order volume for the current year (Demo Data)</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="h-[300px] w-full">
+          <div className="h-75 w-full">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={monthlyData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                 <XAxis dataKey="name" fontSize={12} tickLine={false} axisLine={false} />
@@ -51,7 +51,7 @@ export function AdminCharts() {
           <CardDescription>Breakdown of current order statuses (Demo Data)</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="h-[300px] w-full flex items-center justify-center">
+          <div className="h-75 w-full flex items-center justify-center">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Pie

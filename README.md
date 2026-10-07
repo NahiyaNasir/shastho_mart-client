@@ -1,3 +1,7 @@
+
+<img width="12206" height="2621" alt="diagram (2)" src="https://github.com/user-attachments/assets/a04eeda7-c134-4887-8d87-5083ae7294e6" />
+
+
 # MediStore 💊
 
 MediStore is a full-stack e-commerce platform for purchasing **Over-the-Counter (OTC) medicines**. It provides a seamless experience for customers to browse medicines, place orders, and track purchases, while enabling sellers to manage inventory and fulfill orders. Administrators have complete control over users, medicines, and platform operations.
